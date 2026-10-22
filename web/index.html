@@ -312,17 +312,29 @@ addEventListener("drop", (e) => {
   if (file && file.type.startsWith("video/")) load(file); else glowHide();
 });
 
-// ---- Mirror and scroll
+// ---- Mirror and scrubbing
 
 $("mirror").addEventListener("pointerdown", (e) => e.stopPropagation());
 $("mirror").addEventListener("click", () => setMirror(!mirror));
 
-let wheelAcc = 0;
+// Scroll scrubs, QuickTime style: a two-finger swipe to the right goes
+// forward, to the left goes back. A mouse wheel scrubs too (down = forward).
+// Seeks land a moment later, so a burst of scrolls builds on its own target.
+let scrubTarget = 0, lastScrub = 0;
 addEventListener("wheel", (e) => {
-  if (!v.src) return;
+  if (!v.src || !v.duration) return;
   e.preventDefault();
-  wheelAcc -= e.deltaY;
-  if (Math.abs(wheelAcc) >= 30) { setSpeed(speed + (wheelAcc > 0 ? STEP : -STEP)); wheelAcc = 0; }
+  const dx = -e.deltaX, dy = e.deltaY; // fingers right = forward; page down = forward
+  let d = Math.abs(dx) >= Math.abs(dy) ? dx : dy;
+  // Pixel deltas (trackpads, most wheels): 25 px per second of video. Line deltas: 1 s per line.
+  d *= e.deltaMode === 0 ? 0.04 : 1;
+  const now = performance.now();
+  const base = now - lastScrub < 300 ? scrubTarget : v.currentTime;
+  scrubTarget = Math.min(v.duration, Math.max(0, base + d));
+  lastScrub = now;
+  v.currentTime = scrubTarget;
+  timeDial.set(scrubTarget / v.duration, timeLabel(scrubTarget));
+  wake();
 }, { passive: false });
 
 // ---- Stage: click to play, double-click for full screen, drag sideways to move the video

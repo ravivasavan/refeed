@@ -14,8 +14,8 @@ Drop a video anywhere on the window, or use Select Video. In the Mac app you can
 |---|---|
 | Play / pause | Click the video, or Space |
 | Full screen | Double-click, or F |
-| Scrub | Drag the time dial |
-| Speed, 0.25× to 3× in steps of 0.25 | Drag the speed dial, scroll, or ↑ / ↓ |
+| Scrub | Swipe left or right on the trackpad (right = forward), scroll the mouse wheel (down = forward), or drag the time dial |
+| Speed, 0.25× to 3× in steps of 0.25 | Drag the speed dial, or ↑ / ↓ |
 | Mirror | The button under the dials, or M |
 | Move the video to the left edge, centre or right edge | Drag it sideways, or [ / ] |
 | Skip back / forward 2 s | ← / → |

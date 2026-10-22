@@ -365,7 +365,6 @@ final class StageView: NSView {
     private var dragOffset: CGFloat?
     private var clickTimer: Timer?
     private var idleTimer: Timer?
-    private var wheelAcc: CGFloat = 0
     private var switchingSides = false
     private var dialOnLeft = false
     private var sizeObservation: NSKeyValueObservation?
@@ -627,14 +626,28 @@ final class StageView: NSView {
         }
     }
 
+    // Scroll scrubs, QuickTime style: a two-finger swipe to the right goes
+    // forward, to the left goes back. A mouse wheel scrubs too (down = forward).
     override func scrollWheel(with e: NSEvent) {
-        guard hasVideo else { return }
-        wheelAcc += e.scrollingDeltaY
-        let threshold: CGFloat = e.hasPreciseScrollingDeltas ? 30 : 1
-        if abs(wheelAcc) >= threshold {
-            setSpeed(speed + (wheelAcc > 0 ? step : -step))
-            wheelAcc = 0
-        }
+        guard hasVideo, duration > 0 else { return }
+        // Finger direction, whatever the natural-scrolling setting.
+        let dx = e.isDirectionInvertedFromDevice ? e.scrollingDeltaX : -e.scrollingDeltaX
+        let dy = -e.scrollingDeltaY // scrolling down the page = forward
+        let d = abs(dx) >= abs(dy) ? dx : dy
+        // Trackpads report points (25 pt per second of video); wheels report notches (1 s each).
+        scrub(by: Double(d) * (e.hasPreciseScrollingDeltas ? 0.04 : 1))
+    }
+
+    // Seeks land a moment later, so a burst of scrolls builds on its own target,
+    // not on where the player has got to.
+    private var scrubTarget = 0.0
+    private var lastScrub = Date.distantPast
+
+    private func scrub(by seconds: Double) {
+        let base = Date().timeIntervalSince(lastScrub) < 0.3 ? scrubTarget : player.currentTime().seconds
+        scrubTarget = min(duration, max(0, base + seconds))
+        lastScrub = Date()
+        seek(toFraction: scrubTarget / duration)
     }
 
     override func keyDown(with e: NSEvent) {
