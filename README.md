@@ -1,6 +1,6 @@
 # Refeed
 
-A Mac video player made for one job: playing a signed video full screen so a phone's front camera can read it. Sign-language-to-text features like the Pixel's SL2T only watch the front camera, so to transcribe a recorded video you prop the phone in front of the screen and play it back.
+A video player for the Mac and the browser, made for one job: playing a signed video full screen so a phone's front camera can read it. Sign-language-to-text features like the Pixel's SL2T only watch the front camera, so to transcribe a recorded video you prop the phone in front of the screen and play it back.
 
 Refeed has no chrome. You get the video and one column of controls beside it: a time dial, a speed dial and a mirror switch. Nothing sits on top of the video.
 
@@ -16,7 +16,7 @@ Drop a video anywhere on the window, or use Select Video. In the Mac app you can
 | Full screen | Double-click, or F |
 | Scrub | Drag the time dial |
 | Speed, 0.25× to 3× in steps of 0.25 | Drag the speed dial, scroll, or ↑ / ↓ |
-| Mirror | The button under the dial, or M |
+| Mirror | The button under the dials, or M |
 | Move the video to the left edge, centre or right edge | Drag it sideways, or [ / ] |
 | Skip back / forward 2 s | ← / → |
 | Back to the start | 0 |
